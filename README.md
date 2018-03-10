@@ -1,8 +1,8 @@
 # dubbo-demo
-基于springboot+dubbo的RPC架构案例
+基于Springboot+Dubbo的RPC架构案例
 
 ## 简介
-Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC远程服务调用方案，是阿里巴巴SOA服务化治理方案的核心框架。在本例中我使用zookeeper作为注册中心。
+Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC远程服务调用方案，是阿里巴巴SOA服务化治理方案的核心框架。它提供了非常简单的服务管理而且支持的非常多的协议，提供的注册中心有如下几种类型可供选择：Multicast、Zookeeper、Redis等，在本例中我使用zookeeper作为注册中心。
 
 ## 步骤
 
@@ -76,7 +76,7 @@ Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC
 ## 注意事项
 * 使用dubbo传递的数据必须为经过序列化之后的数据，在本例中UserDTO需实现Serializable类，否则会出现异常：
 
-  java.lang.RuntimeException: Serialized class xxx must implement java.io.Serializable
+          java.lang.RuntimeException: Serialized class xxx must implement java.io.Serializable
   
 * dubbo的内置注解无法识别spring的内置注解，而spring的内置注解也无法识别dubbo的注解，所以尽量避免直接在controller中直接注入dubbo服务对象，
 而是自定义一个service对象在其中引用dubbo服务对象，在spring启动时使用spring内置的@Component注解来注入这个定义的service对象，
