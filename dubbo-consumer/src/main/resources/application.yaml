@@ -1,0 +1,43 @@
+spring.profiles.active: dev
+
+spring:
+    cache:
+        guava:
+            spec: expireAfterWrite=30s
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        # Keep the connection alive if idle for a long time (needed in production)
+        testWhileIdle: true
+        validationQuery: SELECT 1
+    # Show or not log for each sql query
+    jpa:
+        show-sql: true
+    # Hibernate ddl auto (create, create-drop, update)
+    hibernate:
+        ddl-auto: validate
+        #hbm2ddl.auto: update
+        # Naming strategy
+        naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    # The SQL dialect makes Hibernate generate better SQL for the chosen database
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+
+---
+spring:
+    profiles: dev
+    datasource:
+        url:
+        username:
+        password:
+    dubbo:
+        application.name: local-dubbo-consumer
+        registry.address: zookeeper://127.0.0.1:2181
+        protocol.name: dubbo
+        protocol.port: 20890
+        scan: com.rokg.rpc.dubbo.consumer.rpc
+        monitor.protocol: registry
+        timeout: 120000
+
+server:
+    port: 8080
+
+logging.config: classpath:log4j2.yaml
