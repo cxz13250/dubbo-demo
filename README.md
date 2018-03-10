@@ -19,6 +19,7 @@ Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC
         </dependency>
         
 再接着在消费者和提供者项目的pom文件中引入springboot内置的对于dubbo的支持依赖，
+
         <dependency>
             <groupId>io.dubbo.springboot</groupId>
             <artifactId>spring-boot-starter-dubbo</artifactId>
@@ -39,38 +40,38 @@ Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC
 
 在消费者和提供者项目的配置文件中加入如下：
 
-  dubbo:
-        application.name: local-dubbo-consumer #消费者或提供者的名字
-        registry.address: zookeeper://127.0.0.1:2181 #服务注册中心zookeeper的地址
-        protocol.name: dubbo
-        protocol.port: 20890 //消费者或提供者本机的端口
-        protocol.host: 127.0.0.1 //消费者或提供者暴露给zookeeper的地址
-        scan: com.rokg.rpc.dubbo.consumer.rpc //dubbo服务启动后扫描的包名
-        monitor.protocol: registry
-        timeout: 120000 //设置请求响应时间
-        provider.retries: 0 //请求重发的次数
+          dubbo:
+                application.name: local-dubbo-consumer #消费者或提供者的名字
+                registry.address: zookeeper://127.0.0.1:2181 #服务注册中心zookeeper的地址
+                protocol.name: dubbo
+                protocol.port: 20890 //消费者或提供者本机的端口
+                protocol.host: 127.0.0.1 //消费者或提供者暴露给zookeeper的地址
+                scan: com.rokg.rpc.dubbo.consumer.rpc //dubbo服务启动后扫描的包名
+                monitor.protocol: registry
+                timeout: 120000 //设置请求响应时间
+                provider.retries: 0 //请求重发的次数
         
 * 第三步，提供者实现服务
 
 此处需要使用dubbo内置的注解@Service[注意不是spring内置的@Service注解]，如下：
 
-  @Service(version = "1.0.0")
-  @Component
-  public class UserSerivce implements UserService{
-  
-  }
+          @Service(version = "1.0.0")
+          @Component
+          public class UserSerivce implements UserService{
+
+          }
 
 * 第四步，消费者调用服务
 
 此处需要使用dubbo内置的注解@Reference[注意该注解的version值必须与提供者中的设置的一致]，如下：
 
-  @Component
-  public class UserServiceImpl {
+          @Component
+          public class UserServiceImpl {
 
-      @Reference(version = "1.0.0")
-      UserService userService;
-      
-  }
+              @Reference(version = "1.0.0")
+              UserService userService;
+
+          }
 
 ## 注意事项
 * 使用dubbo传递的数据必须为经过序列化之后的数据，在本例中UserDTO需实现Serializable类，否则会出现异常：
