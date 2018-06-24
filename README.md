@@ -77,11 +77,20 @@ Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC
 * 使用dubbo传递的数据必须为经过序列化之后的数据，在本例中UserDTO需实现Serializable类，否则会出现异常：
 
           java.lang.RuntimeException: Serialized class xxx must implement java.io.Serializable
+         
   
 * dubbo的内置注解无法识别spring的内置注解，而spring的内置注解也无法识别dubbo的注解，所以尽量避免直接在controller中直接注入dubbo服务对象，
 而是自定义一个service对象在其中引用dubbo服务对象，在spring启动时使用spring内置的@Component注解来注入这个定义的service对象，
-否则会在服务调用处出现空指针异常。
-
+否则会在服务调用处出现空指针异常。原因是：Spring容器还未加载完，就在Dubbo中暴露服务导致Spring自己的AOP不可用。因此需要将服务放在Spring容器加载完后再暴露。
+              
+                 
 * 安装dubbo监控，将dubbo-admin项目clone到本地，mvn package打包后，将生成的war包至于tomcat的webapps/ROOT中，编辑WEB_INF文件夹下的dubbo.properties文件，
 配置zk地址，在浏览器中访问localhost:8080便可看到监控页面
 
+
+* Dubbo的消费者端的线程都是dameon的（守护线程），但是它底层使用的netty框架里有一个非dameon线程（hashed wheel timer），使得jvm无法退出，原java进程无法正常停止。
+解决办法：在application.yaml文件中添加如下配置：
+
+           dubbo.shutdown.hook:true
+           
+           

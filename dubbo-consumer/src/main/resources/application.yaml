@@ -36,6 +36,7 @@ spring:
         scan: com.rokg.rpc.dubbo.consumer.rpc
         monitor.protocol: registry
         timeout: 120000
+        shutdown.hook: true
 
 server:
     port: 8080
