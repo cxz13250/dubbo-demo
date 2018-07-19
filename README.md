@@ -83,7 +83,12 @@ Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC
 
           java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.Byte
           
-  
+
+* Hessian2协议在获取类属性时，如果构造函数包含参数，在初舒化时会给引用类型传递null，普通类型传递0或false。如果存在子类属性与父类属性相同时，只会获取到子类的feild，反序列化后的对象会有属性丢失，源码如下：
+
+          else if (fieldMap.get(field.getName()) != null)
+                   continue;
+
 * dubbo的内置注解无法识别spring的内置注解，而spring的内置注解也无法识别dubbo的注解，所以尽量避免直接在controller中直接注入dubbo服务对象，
 而是自定义一个service对象在其中引用dubbo服务对象，在spring启动时使用spring内置的@Component注解来注入这个定义的service对象，
 否则会在服务调用处出现空指针异常。原因是：Spring容器还未加载完，就在Dubbo中暴露服务导致Spring自己的AOP不可用。因此需要将服务放在Spring容器加载完后再暴露。
